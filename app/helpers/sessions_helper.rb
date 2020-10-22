@@ -41,4 +41,20 @@ module SessionsHelper
     session.delete(:user_id)
     @current_user = nil
   end
+
+  # Returns true if the given user is the current user.
+  def current_user?(user)
+    user && user == current_user
+  end
+
+  # Store the URL trying to be accessed.
+  def store_location
+    session[:forwading_url] = request.original_url if request.get?
+  end
+
+  # Redirects to stored location (or to the default).
+  def redirect_back_or(default)
+    redirect_to(session[:forwading_url] || default)
+    session.delete(:forwading_url)
+  end
 end
